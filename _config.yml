@@ -1,0 +1,20 @@
+title: My Bootcamp Tutorials
+theme: just-the-docs
+logo: "/assets/images/logo.png" 
+color_scheme: light
+
+# Optional URL setup
+url: "https://<your-username>.github.io"
+baseurl: "/my-bootcamp"  # repo name
+
+# Enable navigation
+aux_links:
+  GitHub: https://github.com/0rajnishk/my-bootcamp
+
+# Enable search
+search_enabled: true
+
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:path/
