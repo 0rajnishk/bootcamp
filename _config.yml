@@ -1,19 +1,20 @@
-title: My Bootcamp Tutorials
+title: Bootcamp Tutorials
 theme: just-the-docs
-logo: "/assets/images/logo.png" 
+logo: "/assets/images/logo.png"
 color_scheme: light
 
-# Optional URL setup
-url: "https://0rajnishk.github.io/bootcamp"
-baseurl: "/bootcamp"  # repo name
+# GitHub Pages-specific settings
+url: "https://0rajnishk.github.io"
+baseurl: "/bootcamp"  # Must match repo name
 
-# Enable navigation
+# Navigation
 aux_links:
   GitHub: https://github.com/0rajnishk/bootcamp
 
 # Enable search
 search_enabled: true
 
+# Enable collections if used
 collections:
   docs:
     output: true
