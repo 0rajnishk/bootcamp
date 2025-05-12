@@ -5,12 +5,12 @@ color_scheme: light
 
 # Optional URL setup
 url: "https://0rajnishk.github.io/bootcamp"
-baseurl: "/my-bootcamp"  # repo name
+baseurl: "/bootcamp"  # repo name
 
 # Enable navigation
 aux_links:
   GitHub: https://github.com/0rajnishk/bootcamp
-  
+
 # Enable search
 search_enabled: true
 
