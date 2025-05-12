@@ -4,13 +4,13 @@ logo: "/assets/images/logo.png"
 color_scheme: light
 
 # Optional URL setup
-url: "https://<your-username>.github.io"
+url: "https://0rajnishk.github.io/bootcamp"
 baseurl: "/my-bootcamp"  # repo name
 
 # Enable navigation
 aux_links:
-  GitHub: https://github.com/0rajnishk/my-bootcamp
-
+  GitHub: https://github.com/0rajnishk/bootcamp
+  
 # Enable search
 search_enabled: true
 
