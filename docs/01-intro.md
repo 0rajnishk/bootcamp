@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Chapter 1- Introduction
+title: bootcamp day 1- Introduction
 nav_order: 1
 ---
 
