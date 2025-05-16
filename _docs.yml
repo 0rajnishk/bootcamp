@@ -2,5 +2,5 @@
   url: /docs/01-intro
 - title: Setup
   url: /docs/02-setup
-# - title: First Component
-#   url: /docs/03-first-component
+- title: First Component
+  url: /docs/03-first-component
