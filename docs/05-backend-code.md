@@ -1,6 +1,6 @@
 ---
 layout: default
-title: backend boilerplate template
+title: backend boilerplate code
 nav_order: 1
 ---
 
