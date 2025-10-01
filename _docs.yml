@@ -1,10 +1,10 @@
-- title: Introduction
-  url: /docs/01-intro
-- title: Setup
-  url: /docs/02-setup
-- title: First Component
-  url: /docs/03-first-component
-- title: backend boilerplate template
-  url: /docs/backend_boilerplate
-- title: backend boilerplate code
-  url: /docs/backend_boilerplate_code
+- title: day 0
+  url: /docs/day0-environment-setup
+# - title: Setup
+#   url: /docs/02-setup
+# - title: First Component
+#   url: /docs/03-first-component
+# - title: backend boilerplate template
+#   url: /docs/backend_boilerplate
+# - title: backend boilerplate code
+#   url: /docs/backend_boilerplate_code
