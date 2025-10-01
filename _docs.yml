@@ -1,10 +1,14 @@
-- title: day 0
+- title: Day 0 - Environment Setup
   url: /docs/day0-environment-setup
-# - title: Setup
-#   url: /docs/02-setup
-# - title: First Component
-#   url: /docs/03-first-component
-# - title: backend boilerplate template
-#   url: /docs/backend_boilerplate
-# - title: backend boilerplate code
-#   url: /docs/backend_boilerplate_code
+# - title: Day 1 - Backend Foundation
+#   url: /docs/day1-backend-foundation
+# - title: Day 2 - RESTful API & JWT
+#   url: /docs/day2-restful-api-jwt
+# - title: Day 3 - Frontend Foundation
+#   url: /docs/day3-frontend-foundation
+# - title: Day 4 - Interactive Frontend
+#   url: /docs/day4-interactive-frontend
+# - title: Day 5 - Component Communication
+#   url: /docs/day5-component-communication
+# - title: Day 6 - Caching & Deployment
+#   url: /docs/day6-caching-deployment

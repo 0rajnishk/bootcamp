@@ -14,8 +14,18 @@ aux_links:
 # Enable search
 search_enabled: true
 
+# Exclude ignore folder from Jekyll processing
+exclude:
+  - ignore/
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - plan.md
+  - codes/
+
 # Enable collections if used
 collections:
   docs:
     output: true
     permalink: /:collection/:path/
+    sort_by: nav_order
