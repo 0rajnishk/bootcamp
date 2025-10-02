@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Day 0: Development Environment Setup
-nav_order: 0
+title: Day 0 - Development Environment Setup
+nav_order: 1
 ---
 
 
@@ -40,6 +40,9 @@ WSL (Windows Subsystem for Linux) allows you to run a Linux environment directly
 1. Install Windows Terminal from Microsoft Store
 2. Open Windows Terminal
 3. Select Ubuntu from the dropdown
+
+![Select Ubuntu Terminal](/bootcamp/assets/images/selecting_ubantu_terminal.png)
+
 
 ## Linux/macOS Users
 If you're already on Linux or macOS, you can skip the WSL section and proceed directly to the software installation.
@@ -138,14 +141,14 @@ ssh-keygen -t ed25519 -C "your.email@example.com"
 # Press Enter to accept default file location
 # Enter a passphrase / or click enter to skip (optional)
 ```
-![SSH Keygen Screenshot](../codes\ss\0\ssh_keygen.png)
+![SSH Keygen Screenshot](/bootcamp/assets/images/ssh_keygen.png)
 
 ```bash
 # Display public key
 cat ~/.ssh/id_ed25519.pub
 ```
 
-![SSH Keygen Screenshot](../codes\ss\0\ssh_keygen.png)
+![SSH Keygen Screenshot](/bootcamp/assets/images/public_key_ssh.png)
 
 
 
@@ -158,10 +161,14 @@ cat ~/.ssh/id_ed25519.pub
 6. Paste your public key and give it a title
 7. Click "Add SSH key"
 
+![Add SSH Key to GitHub](/bootcamp/assets/images/add_ssh_key_github.png)
+
 #### Test SSH Connection
 ```bash
 ssh -T git@github.com
 ```
+
+![Add SSH Key to GitHub](/bootcamp/assets/images/ssh_verification.png)
 
 ## Creating Your First Vue.js Project
 
@@ -303,6 +310,35 @@ git commit -m "Add project structure and gitignore"
 git push
 ```
 
+##  Official Documentation & References
+
+Please check the following official documents and resources for detailed guidance:
+
+### Git & GitHub
+
+- **Git Tracker Documentation:**  
+  [Google Docs - Git Tracker](https://docs.google.com/document/u/2/d/e/2PACX-1vSQb6y00ELBQ4MC1FAhn1JO8LmVsxGe1ke_aJi8hEIEHYLO8RqHDzl0bxZtxj6J-AYumNrA7jdxRmyu/pub)
+
+- **Git & GitHub Tutorial:**  
+  [GitHub Tutorial (GitHub Repo)](https://github.com/shrikrishna97/Resources-App-Dev/blob/main/github_tutorial.md)
+
+- **Adding Git Collaborators:**  
+  [How to Add Collaborators (GitHub Tutorial)](https://github.com/shrikrishna97/Resources-App-Dev/blob/main/github_tutorial.md)
+
+---
+
+###  Problem Statements
+
+- **Hospital Management System:**  
+  [Hospital Management System Problem Statement](https://docs.google.com/document/d/e/2PACX-1vT24eOovDRvuEmX40yLNycO5qWIxyzPAY00yenNW83nDeEELuZd5YJ47JDhpnYNL1sxnYDkBFTBY9My/pub)
+
+- **Vehicle Parking System:**  
+  [Vehicle Parking Problem Statement](https://docs.google.com/document/d/e/2PACX-1vQdJBJIK0445RS8pl6sAX1pH9hSSWB9NCKfC0jx_9QqKt4frI43HeEvlYQYi1N9HkZ827Z3n4_BiJ8n/pub)
+
+---
+
+
+
 **You are all set!**
 
 Your development environment is ready. You have:
@@ -320,9 +356,6 @@ In next session, we’ll begin Day 1 of the bootcamp:
 - Set up a database
 - Start building your first project
 
-Get some rest and get ready for an exciting journey!
-
 If you have any issues, just ask for help in the google space.
 
-Let’s get started!
 
