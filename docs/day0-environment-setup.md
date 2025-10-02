@@ -170,45 +170,98 @@ ssh -T git@github.com
 
 ![Add SSH Key to GitHub](/bootcamp/assets/images/ssh_verification.png)
 
-## Creating Your First Vue.js Project
+## Creating Your First Vue.js Project 
 
-### 1. Create a New Vue Project
+### 1. Open Terminal & Go to Your Projects Folder
+
 ```bash
-# Navigate to your projects directory
 cd ~/bootcamp-projects
-
-# Create a new Vue project with Vite
-npm create vue@latest my-first-vue-app
-
-# Follow the prompts:
-# - Project name: my-first-vue-app
-# - Add TypeScript? No
-# - Add JSX Support? No
-# - Add Vue Router? Yes
-# - Add Pinia? No
-# - Add Vitest? No
-# - Add E2E Testing? No
-# - Add ESLint? Yes
-# - Add Prettier? Yes
 ```
 
-### 2. Navigate to Project and Install Dependencies
+
+---
+
+### 2. Create a New Vue Project
+
+```bash
+npm create vue@latest my-first-vue-app
+```
+
+When it asks questions, use spacebar to select and press enter to continue.
+
+#### Feature Selection
+
+When you see the checkbox menu:
+
+```
+Select features to include in your project:
+☑ Router (SPA development)
+☑ ESLint (error prevention)
+☑ Prettier (code formatting)
+```
+
+ **Only check these three** by pressing **Spacebar** on each, then press **Enter**.
+
+---
+
+#### Experimental Features
+
+```
+Select experimental features to include in your project:
+```
+
+**Press Enter without selecting anything** (leave it blank).
+
+---
+
+#### Skip Example Code?
+
+```
+Skip all example code and start with a blank Vue project?
+○ Yes / ● No
+```
+
+ **Select "No"** (keep the example code so you can learn from it).
+
+---
+
+![Vue Project Creation](/bootcamp/assets/images/vue_project_creation.png)
+
+### 3. Open Project & Install
+
 ```bash
 cd my-first-vue-app
 npm install
 ```
 
-### 3. Start Development Server
+---
+
+### 4. Start Development Server
+
 ```bash
 npm run dev
 ```
 
-### 4. View Your Application
-- Open your browser and go to `http://localhost:5173`
-- You should see the Vue.js welcome page
+---
 
-### 5. Stop the Development Server
+### 5. View Your App
+
+* Open **[http://localhost:5173](http://localhost:5173)** in your browser.
+* You’ll see a **Vue welcome page** with example components.
+
+
+
+### 6. Stop the Development Server
 - Press `Ctrl + C` in the terminal to stop the server
+
+### 7. Build for Production
+```bash
+# Create optimized production build
+npm run build
+
+# Preview the production build locally
+npm run preview
+```
 
 ## Setting Up Your Bootcamp Repository
 
