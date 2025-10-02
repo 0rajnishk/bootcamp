@@ -22,23 +22,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Setup Ruby without bundler-cache
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
-          # Remove: bundler-cache: true
+          bundler-cache: true
 
-      # 2. Add the Linux platform to Gemfile.lock
-      # This step fixes the platform mismatch
-      - name: Add Linux platform to Gemfile.lock
-        run: bundle lock --add-platform x86_64-linux
-
-      # 3. Install dependencies (this will use or create a cache)
       - name: Install dependencies
         run: bundle install
 
-      # ... the rest of your steps
       - name: Build site with Jekyll
         run: bundle exec jekyll build
 
@@ -46,3 +38,15 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
