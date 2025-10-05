@@ -1,9 +1,9 @@
 - title: Day 0 - Environment Setup
   url: /docs/day0-environment-setup
-# - title: Day 1 - Backend Foundation
-#   url: /docs/day1-backend-foundation
-# - title: Day 2 - RESTful API & JWT
-#   url: /docs/day2-restful-api-jwt
+- title: Day 1 - Backend Foundation
+  url: /docs/day1-backend-foundation
+- title: Day 2 - RESTful API & JWT
+  url: /docs/day2-restful-api-jwt
 # - title: Day 3 - Frontend Foundation
 #   url: /docs/day3-frontend-foundation
 # - title: Day 4 - Interactive Frontend
