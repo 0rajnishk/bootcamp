@@ -15,10 +15,181 @@ By the end of this day, you will be able to:
 - Structure code using Flask-RESTful resources
 - Handle JSON requests and responses
 
-## Prerequisites
-- Completed Day 1 exercises
-- Understanding of Flask basics
-- Basic knowledge of HTTP methods (GET, POST, PUT, DELETE)
+
+## Quick Start
+
+### Install dependencies
+```bash
+pip install flask flask-restful flask-sqlalchemy flask-jwt-extended werkzeug
+```
+
+### Create app.py (single-file demo)
+Copy this entire code into a new file named `app.py` and run it.
+
+```python
+from flask import Flask, request
+from flask_restful import Resource, Api
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
+
+
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+db = SQLAlchemy(app)
+
+api = Api(app)
+app.config["JWT_SECRET_KEY"] = "super-secret"
+jwt = JWTManager(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    password_hash = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(50), default='employee')  # 'admin' or 'employee'
+
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    assigned_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    status = db.Column(db.String(50), default='pending')  # 'pending', 'in-progress', 'completed'
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    assigned_date = db.Column(db.DateTime, nullable=True)
+    completed_date = db.Column(db.DateTime, nullable=True)
+
+
+with app.app_context():
+    db.create_all()
+
+
+class HelloWorld(Resource):
+    @jwt_required()
+    def get(self):
+        email = get_jwt_identity()
+        user = User.query.filter_by(email=email).first()
+        return {"message": f"Hello, {user.full_name}!"}
+
+    def post(self):
+        return {'message': 'POST request received'}, 201
+    
+
+class SignupResource(Resource):
+    def post(self):
+        data = request.get_json()
+        full_name = data.get('full_name')
+        password = data.get('password')
+        email = data.get('email')
+
+        if not full_name or not email or not password:
+            return {"message": "full_name, email and password are required"}, 400
+
+        if User.query.filter_by(email=email).first():
+            return {"message": "email already registered"}, 400
+
+        password_hash = generate_password_hash(password)
+        new_user = User(full_name=full_name, password_hash=password_hash, email=email)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return {'message': 'user registered successfully'}, 201
+    
+class LoginResource(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return {"message": "email and password are required"}, 400
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "no such user"}, 404
+        if check_password_hash(user.password_hash, password):
+            access_token = create_access_token(identity=user.email)
+            return {'token': access_token}
+        else:
+            return {"message": "wrong password"}, 401
+
+api.add_resource(HelloWorld, '/')
+api.add_resource(SignupResource, '/signup')
+api.add_resource(LoginResource, '/login')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+### Run the server
+```bash
+python app.py
+```
+
+Server runs at `http://127.0.0.1:5000`.
+
+## Test with Postman
+
+1) Signup
+- Method: POST
+- URL: `http://127.0.0.1:5000/signup`
+- Headers: `Content-Type: application/json`
+- Body (raw JSON):
+```json
+{
+  "full_name": "Alice Example",
+  "email": "alice@example.com",
+  "password": "password123"
+}
+```
+- Expected: `201 Created`, message: user registered successfully
+
+2) Login
+- Method: POST
+- URL: `http://127.0.0.1:5000/login`
+- Headers: `Content-Type: application/json`
+- Body (raw JSON):
+```json
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+```
+- Expected: `200 OK` with `{ "token": "<JWT>" }`
+
+3) Access protected route
+- Method: GET
+- URL: `http://127.0.0.1:5000/`
+- Headers: `Authorization: Bearer <JWT>`
+- Expected: `200 OK` with `{"message": "Hello, Alice Example!"}`
+
+## Test with curl
+
+```bash
+# 1) Signup
+curl -X POST http://127.0.0.1:5000/signup \
+  -H "Content-Type: application/json" \
+  -d '{"full_name":"Alice Example","email":"alice@example.com","password":"password123"}'
+
+# 2) Login (capture token)
+TOKEN=$(curl -s -X POST http://127.0.0.1:5000/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","password":"password123"}' | python -c "import sys, json; print(json.load(sys.stdin)['token'])")
+
+# 3) Call protected route
+curl -X GET http://127.0.0.1:5000/ \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+## Notes and Troubleshooting
+- Ensure the DB file `project.db` is writable. To reset locally, delete it and restart the app to re-create tables.
+- Change `app.config["JWT_SECRET_KEY"]` in production; prefer environment variables.
+- If you get 401 on the protected route, verify the `Authorization` header format: `Bearer <token>`.
+- If email is already registered, you will get 400 on signup.
+
 
 ## What is a RESTful API?
 
