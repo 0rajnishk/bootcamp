@@ -183,6 +183,43 @@ createApp(Root).use(router).mount('#app')
 
 ## API Integration with Axios
 
+### Basic Axios Usage Example
+Here's a simple example of how to use axios to call your backend APIs:
+
+```javascript
+// Basic axios usage
+async getHello(){
+  const response = await axios.get('http://127.0.0.1:5000/')
+  alert(response.data)
+}
+```
+
+This example shows:
+- Making a GET request to your backend
+- Using `await` for asynchronous operations
+- Accessing response data with `response.data`
+- The response will be `'Hello, World!'` from your backend
+
+### Backend APIs Available
+Your Day 2 backend provides these endpoints:
+
+1. **GET /** - Public endpoint
+   - Returns: `'Hello, World!'`
+   - No authentication required
+
+2. **POST /** - Protected endpoint
+   - Returns: `'Hello, World!'`
+   - Requires JWT token in Authorization header
+   - Uses `@jwt_required()` decorator
+
+3. **POST /signup** - User registration
+   - Body: `{ full_name, email, password }`
+   - Returns: `'user registered successfully'`
+
+4. **POST /login** - User authentication
+   - Body: `{ email, password }`
+   - Returns: `{ token: 'jwt_token_here' }`
+
 ### Setting Up Axios (wired to Day 2 API)
 ```javascript
 // src/services/api.js
@@ -208,7 +245,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token')
-      localStorage.removeItem('username')
+      localStorage.removeItem('email')
     }
     return Promise.reject(error)
   }
@@ -226,9 +263,13 @@ export const authService = {
 }
 
 export const helloService = {
-  async greet() {
+  async getHello() {
     const res = await api.get('/')
-    return res.data // { message: 'Hello, <name>!' }
+    return res.data // 'Hello, World!'
+  },
+  async postHello() {
+    const res = await api.post('/')
+    return res.data // 'Hello, World!' (requires JWT)
   }
 }
 ```
@@ -475,35 +516,110 @@ export default router
 ### HomeView.vue
 ```vue
 <template>
-  <div>
-    <h2>Home</h2>
-    <p>Call protected backend route using your JWT token.</p>
-    <div style="margin: 10px 0;">
-      <button @click="greet" :disabled="loading">{{ loading ? 'Loading...' : 'Greet' }}</button>
+  <div class="home">
+    <h1>Welcome to Task Manager</h1>
+    <p>Test the API integration with your backend using Axios!</p>
+    
+    <div class="api-demo">
+      <h2>API Demo</h2>
+      
+      <!-- Public API Call -->
+      <div class="api-section">
+        <h3>Public API Call (GET /)</h3>
+        <button @click="getHello" :disabled="loading.getHello">
+          {{ loading.getHello ? 'Loading...' : 'Get Hello' }}
+        </button>
+        <div v-if="messages.getHello" class="message success">
+          {{ messages.getHello }}
+        </div>
+      </div>
+      
+      <!-- Protected API Call -->
+      <div class="api-section">
+        <h3>Protected API Call (POST /)</h3>
+        <p class="info">This requires JWT authentication. Login first to test this endpoint.</p>
+        <button @click="postHello" :disabled="loading.postHello">
+          {{ loading.postHello ? 'Loading...' : 'Post Hello (Protected)' }}
+        </button>
+        <div v-if="messages.postHello" class="message success">
+          {{ messages.postHello }}
+        </div>
+        <div v-if="errors.postHello" class="message error">
+          {{ errors.postHello }}
+        </div>
+      </div>
+      
+      <!-- Authentication Status -->
+      <div class="auth-status">
+        <h3>Authentication Status</h3>
+        <div v-if="isAuthenticated" class="message success">
+          ✅ You are logged in! Token: {{ token ? 'Present' : 'Missing' }}
+        </div>
+        <div v-else class="message warning">
+          ⚠️ You are not logged in. <router-link to="/login">Login here</router-link>
+        </div>
+      </div>
     </div>
-    <p v-if="message">{{ message }}</p>
   </div>
-  
 </template>
 
 <script>
-import { helloService } from '../services/api'
+import { helloService } from '../services/api.js'
 
 export default {
-  name: 'HomeView',
+  name: 'Home',
   data() {
-    return { message: '', loading: false }
+    return {
+      loading: {
+        getHello: false,
+        postHello: false
+      },
+      messages: {
+        getHello: '',
+        postHello: ''
+      },
+      errors: {
+        postHello: ''
+      },
+      token: localStorage.getItem('token')
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      return !!this.token
+    }
   },
   methods: {
-    async greet() {
-      this.loading = true
+    async getHello() {
+      this.loading.getHello = true
+      this.messages.getHello = ''
+      
       try {
-        const data = await helloService.greet()
-        this.message = data.message
-      } catch (e) {
-        this.message = 'Unauthorized. Please login first.'
+        const response = await helloService.getHello()
+        this.messages.getHello = `Response: ${response}`
+      } catch (error) {
+        this.messages.getHello = `Error: ${error.response?.data || error.message}`
       } finally {
-        this.loading = false
+        this.loading.getHello = false
+      }
+    },
+    
+    async postHello() {
+      this.loading.postHello = true
+      this.messages.postHello = ''
+      this.errors.postHello = ''
+      
+      try {
+        const response = await helloService.postHello()
+        this.messages.postHello = `Response: ${response}`
+      } catch (error) {
+        if (error.response?.status === 401) {
+          this.errors.postHello = 'Unauthorized! Please login first.'
+        } else {
+          this.errors.postHello = `Error: ${error.response?.data || error.message}`
+        }
+      } finally {
+        this.loading.postHello = false
       }
     }
   }
@@ -528,6 +644,7 @@ export default {
       <button type="submit" :disabled="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
     </form>
     <p v-if="error" class="error">{{ error }}</p>
+    <p v-if="success" class="success">{{ success }}</p>
   </div>
 </template>
 
@@ -537,19 +654,36 @@ import { authService } from '../services/api'
 export default {
   name: 'LoginView',
   data() {
-    return { email: '', password: '', loading: false, error: '' }
+    return { 
+      email: '', 
+      password: '', 
+      loading: false, 
+      error: '',
+      success: ''
+    }
   },
   methods: {
     async handleLogin() {
       this.loading = true
       this.error = ''
+      this.success = ''
+      
       try {
-        const { token } = await authService.login(this.email, this.password)
-        localStorage.setItem('token', token)
-        // Optional: store email/name separately if needed
-        this.$router.push('/')
+        const response = await authService.login(this.email, this.password)
+        
+        // Handle different response types
+        if (response.token) {
+          localStorage.setItem('token', response.token)
+          localStorage.setItem('email', this.email)
+          this.success = 'Login successful! Redirecting...'
+          setTimeout(() => {
+            this.$router.push('/')
+          }, 1000)
+        } else {
+          this.error = 'Invalid response from server'
+        }
       } catch (e) {
-        this.error = e.response?.data?.message || 'Login failed'
+        this.error = e.response?.data || 'Login failed'
       } finally {
         this.loading = false
       }
@@ -559,8 +693,46 @@ export default {
 </script>
 
 <style scoped>
-.login-form { max-width: 400px; margin: 0 auto; }
-.error { color: red; margin-top: 10px; }
+.login-form { 
+  max-width: 400px; 
+  margin: 0 auto; 
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.error { 
+  color: red; 
+  margin-top: 10px; 
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}
 </style>
 ```
 
@@ -635,9 +807,15 @@ npm run dev
 ```
 
 3. Navigate routes:
-- `http://localhost:5173/` → `HomeView.vue` (use Greet to call protected `/`)
-- `http://localhost:5173/login` → `LoginView.vue` (stores JWT)
-- `http://localhost:5173/register` → `RegisterView.vue`
+- `http://localhost:5173/` → `HomeView.vue` (test both GET and POST `/` endpoints)
+- `http://localhost:5173/login` → `LoginView.vue` (stores JWT token)
+- `http://localhost:5173/register` → `RegisterView.vue` (user registration)
+
+### Testing the API Integration
+1. **Test Public API**: Click "Get Hello" button on home page
+2. **Test Registration**: Go to `/register` and create a new user
+3. **Test Login**: Go to `/login` and authenticate with your credentials
+4. **Test Protected API**: After login, return to home and click "Post Hello (Protected)"
 
 ### Main.js Setup
 ```javascript

@@ -6,3 +6,4 @@ vendor
 ignore/
 codes/
 plan.md
+.cursor
