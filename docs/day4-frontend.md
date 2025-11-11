@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Day 3 - Frontend Foundation - Vue.js & Integration
+title: Day 4 - Frontend - Vue.js & Integration
 nav_order: 4
 ---
 
@@ -35,14 +35,16 @@ Project tree (minimal):
 ├─ package.json
 ├─ vite.config.js
 └─ src/
-   ├─ main.js
-   ├─ App.vue
-   ├─ router/
-   │  └─ index.js
-   └─ Views/
-      ├─ HomeView.vue
-      ├─ LoginView.vue
-      └─ SignUp.vue
+    ├─ main.js
+    ├─ App.vue
+    ├─ router/
+    │  └─ index.js
+    ├─ components/
+    │  └─ CompA.vue
+    └─ Views/
+        ├─ HomeView.vue
+        ├─ LoginView.vue
+        └─ SignUp.vue
 ```
 
 index.html
@@ -101,6 +103,12 @@ src/Views/HomeView.vue
         <p>{{ user.username }}</p>
         <p>{{ user.email }}</p>
         <p>{{ user.phone_number }}</p>
+
+        <!-- Child component: listen for the custom event 'send-data' emitted by CompA -->
+        <CompA :msg="data" @send-data="ChildData" />
+
+        <p>Child says: {{ dataA }}</p>
+
         <button @click="popAlert()">alert</button>
         <button @click="hello()">fetch hello</button>
     </div>
@@ -108,14 +116,19 @@ src/Views/HomeView.vue
 
 <script>
 import axios from 'axios';
+import CompA from '@/components/CompA.vue';
 
 export default{
 
     data() {
         return{
             data:'data value',
+            dataA: 'waiting..',
             users:{}
         }
+    },
+    components:{ 
+        CompA
     },
     methods: {
 
@@ -135,8 +148,14 @@ export default{
             this.users = response.data.user
             alert(response.data.msg)
         },
+        ChildData(data) {
+            // show and store the payload coming from CompA
+            alert('received from child: ' + data)
+            this.dataA = data
+        }
+
         
-        
+
     },
     mounted() {
         this.hello()
@@ -243,6 +262,37 @@ export default {
 
 ```
 
+src/components/CompA.vue
+```vue
+<template>
+    <div class="comp-a">
+        <h1>component A</h1>
+        <h2>{{ msg }}</h2>
+        <button @click="sendToParent">send data</button>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            data: 'data from child'
+        }
+    },
+    props: {
+        msg: String
+    },
+
+    methods: {
+        sendToParent() {
+            this.$emit('send-data', this.data)
+        }
+    }
+}
+
+</script>
+```
+
 ## Quick component anatomy & common patterns (short examples)
 
 data() (shape)
@@ -291,7 +341,6 @@ methods: {
 }
 ```
 
-
 Lifecycle hooks (examples)
 ```javascript
 created() {
@@ -307,7 +356,6 @@ beforeUnmount() {
 }
 ```
 
-
 Axios standalone examples (minimal)
 ```javascript
 // GET
@@ -318,4 +366,33 @@ await axios.post('http://127.0.0.1:5000/api/items', { title: 'hello' })
 
 // DELETE
 await axios.delete('http://127.0.0.1:5000/api/items/123')
+```
+
+Parent → Child and Child → Parent (data flow)
+
+Parent (template + handler)
+```html
+<!-- Parent template -->
+<ChildComp :item="selectedItem" @update-item="onUpdateItem" />
+```
+
+```javascript
+// Parent methods
+methods: {
+    onUpdateItem(newData) {
+        // handle payload from child
+        this.selectedItem = newData
+    }
+}
+```
+
+Child (props + emit)
+```javascript
+props: ['item'],
+methods: {
+    sendUpdate() {
+        const payload = { ...this.item, updatedAt: Date.now() }
+        this.$emit('update-item', payload)
+    }
+}
 ```
