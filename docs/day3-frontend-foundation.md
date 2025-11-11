@@ -306,16 +306,3 @@ beforeUnmount() {
     // cleanup
 }
 ```
-
-
-Axios standalone examples (minimal)
-```javascript
-// GET
-await axios.get('http://127.0.0.1:5000/api/items')
-
-// POST
-await axios.post('http://127.0.0.1:5000/api/items', { title: 'hello' })
-
-// DELETE
-await axios.delete('http://127.0.0.1:5000/api/items/123')
-```

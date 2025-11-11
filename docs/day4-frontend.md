@@ -4,26 +4,7 @@ title: Day 4 - Frontend - Vue.js & Integration
 nav_order: 4
 ---
 
-# Day 3: Frontend Foundation - Vue.js & Integration
-
-## Setting Up Vue.js with Vite
-
-### Installation
-```bash
-# Create new Vue project
-npm create vue@latest task-manager-frontend
-
-# Navigate to project directory
-cd task-manager-frontend
-
-# Install dependencies
-npm install
-
-# Install additional packages
-npm install axios vue-router@4
-```
-find detailed guid to install vue.js with vite [here](https://0rajnishk.github.io/bootcamp/docs/day0-environment-setup.html#2-create-a-new-vue-project)
-
+# Day 4: Frontend - Vue.js & Integration
 
 ## Vue Router Setup
 ### Minimal frontend structure and files
@@ -393,6 +374,60 @@ methods: {
     sendUpdate() {
         const payload = { ...this.item, updatedAt: Date.now() }
         this.$emit('update-item', payload)
+    }
+}
+```
+
+## Template directives (short examples)
+
+v-if / v-else / v-else-if
+```html
+<div>
+    <p v-if="items.length === 0">No items</p>
+    <p v-else-if="loading">Loading...</p>
+    <p v-else>Found {{ items.length }} items</p>
+</div>
+```
+
+v-show (toggle visibility without re-render)
+```html
+<div v-show="isVisible">This is visible but not removed from DOM when false</div>
+```
+
+v-for (lists)
+```html
+<ul>
+    <li v-for="(item, idx) in items" :key="item.id">{{ idx + 1 }}. {{ item.title }}</li>
+    <!-- shorthand for binding: :title="item.title" -->
+</ul>
+```
+
+v-bind and v-on (shorthands)
+```html
+<img :src="imageUrl" :alt="imageAlt" />
+<button @click="handleClick">Click me</button>
+```
+
+Using expressions and event args
+```html
+<button @click="addItem('new')">Add</button>
+<input v-model="form.title" />
+```
+
+Computed property example (short)
+```javascript
+computed: {
+    itemsCount() {
+        return this.items.length
+    }
+}
+```
+
+Watch example (short)
+```javascript
+watch: {
+    'form.title'(newVal) {
+        console.log('title changed', newVal)
     }
 }
 ```
