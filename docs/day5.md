@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Flask, Celery, Redis, and SMTP Integration"  
+title: "Day 5 - Flask, Celery, Redis, and SMTP Integration"  
 nav_order: 4
 ---
 
